@@ -566,3 +566,57 @@ a:hover {
 }
 .export-row .tikking.card { width: 320px; flex: 0 0 auto; }
 
+/* Linear print timeline (test) */
+.gt-print-doc.linear .tl-section { padding-top: 18px; }
+.gt-print-doc.linear .tl-title { margin-bottom: 14px; }
+
+.gt-print-doc.linear .tl-rail {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 0 6px;
+}
+
+.gt-print-doc.linear .tl-rail::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 2px;
+  background: linear-gradient(90deg,#e5e5e5,#f0f0f0);
+  transform: translateY(-50%);
+}
+
+.gt-print-doc.linear .tl-stop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px; 
+}
+
+.gt-print-doc.linear .tl-dot {
+  width: 12px; height: 12px; border-radius: 999px; background: #c20e1a; border: 2px solid #fff; 
+  box-shadow: 0 0 0 2px rgba(0,0,0,.06);
+}
+
+.gt-print-doc.linear .tl-time {
+  margin-top: 8px; font-weight: 800; font-size: 12px;
+}
+
+.gt-print-doc.linear .tl-meta {
+  margin-top: 4px; font-size: 11px; color: #333; display: flex; gap: 8px; align-items: center;
+}
+
+.gt-print-doc.linear .tl-badge {
+  font-weight: 800; font-size: 10px; padding: 2px 8px; border-radius: 999px; border: 1px solid transparent;
+}
+.gt-print-doc.linear .tl-badge.in  { color:#16a34a; background:rgba(22,163,74,.08); border-color:rgba(22,163,74,.25); }
+.gt-print-doc.linear .tl-badge.out { color:#c20e1a; background:rgba(194,14,26,.10); border-color:rgba(194,14,26,.30); }
+
+.gt-print-doc.linear .tl-rail.equal .tl-stop {
+  flex: 1 1 0;
+}
+.gt-print-doc.linear .tl-rail.tight .tl-stop {
+  flex: 0 0 auto;
+}
