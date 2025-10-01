@@ -1,4 +1,3 @@
-// connectors.js
 const LINE_COLOR = "#d6d6d6";
 const LINE_WIDTH = 2;
 
@@ -10,17 +9,15 @@ export function drawConnectorsFor(wrap) {
 
   const cards = [...grid.querySelectorAll(".tikking")];
   if (cards.length < 2) {
-    // Nothing (or only one) to connect
     const ctx0 = canvas.getContext("2d");
     ctx0 && ctx0.clearRect(0, 0, canvas.width, canvas.height);
     return;
   }
 
   const rect = wrap.getBoundingClientRect();
-  // If the element is not laid out (display:none), skip
+
   if (rect.width < 2 || rect.height < 2) return;
 
-  // Hi-DPI scaling
   const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
   canvas.style.width = `${Math.floor(rect.width)}px`;
   canvas.style.height = `${Math.floor(rect.height)}px`;
@@ -28,7 +25,7 @@ export function drawConnectorsFor(wrap) {
   canvas.height = Math.max(1, Math.floor(rect.height * dpr));
 
   const ctx = canvas.getContext("2d");
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // draw in CSS pixels
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, rect.width, rect.height);
   ctx.lineWidth = LINE_WIDTH;
   ctx.lineCap = "round";
@@ -56,7 +53,6 @@ export function drawConnectorsFor(wrap) {
 
     ctx.beginPath();
     if (sameRow) {
-      // horizontal elbow
       const midX = (a.right.x + b.left.x) / 2;
       ctx.moveTo(a.right.x, a.right.y);
       ctx.lineTo(midX, a.right.y);
@@ -64,10 +60,8 @@ export function drawConnectorsFor(wrap) {
       ctx.lineTo(b.left.x, b.left.y);
       ctx.stroke();
 
-      // Arrowhead pointing to b.left
-      drawArrowhead(ctx, b.left.x, b.left.y, Math.atan2(0, -1)); // leftwards
+      drawArrowhead(ctx, b.left.x, b.left.y, Math.atan2(0, -1));
     } else {
-      // vertical elbow (wrap)
       const midY = (a.bottom.y + b.top.y) / 2;
       ctx.moveTo(a.bottom.x, a.bottom.y);
       ctx.lineTo(a.bottom.x, midY);
@@ -75,14 +69,12 @@ export function drawConnectorsFor(wrap) {
       ctx.lineTo(b.top.x, b.top.y);
       ctx.stroke();
 
-      // Arrowhead pointing down to b.top
-      drawArrowhead(ctx, b.top.x, b.top.y, Math.atan2(1, 0)); // downward
+      drawArrowhead(ctx, b.top.x, b.top.y, Math.atan2(1, 0));
     }
   }
 }
 
 function drawArrowhead(ctx, x, y, angle) {
-  // Small, subtle arrowhead
   const size = 6;
   ctx.save();
   ctx.translate(x, y);

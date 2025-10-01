@@ -1,8 +1,7 @@
-// app.js
 import { drawConnectorsFor, drawAllConnectorsQueued } from "./connectors.js";
 import { exportTimelinesA4 } from "./export.js";
 import { exportPrint } from "./print.js";
-import { setupImport } from "./import.js"; // centralizes import button + hidden file input
+import { setupImport } from "./import.js"; 
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -83,7 +82,7 @@ function makeMoveBtn(direction) {
 function attachResizeObserver(wrap) {
   const ro = new ResizeObserver(() => drawConnectorsFor(wrap));
   ro.observe(wrap);
-  wrap._ro = ro; // keep reference if you later want to disconnect
+  wrap._ro = ro; 
 }
 
 function makeTikkingCard(idx, data = {}) {
