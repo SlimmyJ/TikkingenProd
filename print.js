@@ -16,8 +16,7 @@ export async function exportPrint(root = document) {
     <div class="ph-meta">${new Date().toLocaleString()}</div>
   `;
   wrap.appendChild(header);
-
-
+  
   const canvases = [...root.querySelectorAll('.gt-canvas')];
   for (const canvas of canvases) {
     const titleText = canvas.querySelector('.gt-title')?.textContent?.trim() || 'Tijdlijn';

@@ -590,8 +590,6 @@ a:hover {
 .gt-print-doc.linear .tl-rail.tight .tl-stop {
   flex: 0 0 auto;
 }
-
-/* Make the linked brand look exactly like the old block element */
 .gt-logo { display:inline-flex; align-items:center; gap:.6rem; font-weight:900; letter-spacing:.2px; font-size:1.15rem; color: var(--gt-black); text-decoration:none; }
 .gt-logo img { height:36px; width:auto; display:block; }
 .gt-logo:focus { outline: none; }
