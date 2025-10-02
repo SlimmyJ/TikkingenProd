@@ -30,10 +30,10 @@ export async function handleImportFile(
     const state = parseWorkbookToState(wb);
     deserialize?.(state);
     saveState?.();
-    flash?.(`Import voltooid ✅ (${file.name})`);
+    flash?.(`Import voltooid(${file.name})`);
   } catch (err) {
     console.error(err);
-    flash?.("Import mislukt ❌");
+    flash?.("Import mislukt");
     throw err;
   }
 }

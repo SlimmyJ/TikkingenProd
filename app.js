@@ -189,7 +189,7 @@ function makeTimeline() {
   const del = document.createElement("button");
   del.type = "button";
   del.className = "gt-delete";
-  del.textContent = "❌ Verwijder";
+  del.textContent = "Verwijder";
   del.addEventListener("click", () => {
     if (confirm("Weet je zeker dat je deze tijdlijn wilt verwijderen?")) {
       canvas.remove();
@@ -235,7 +235,7 @@ function clearAllTimelines() {
   host.innerHTML = "";
   localStorage.removeItem(STORAGE_KEY);
   drawAllConnectorsQueued();
-  flash("Alle tijdlijnen verwijderd 🗑️");
+  flash("Alle tijdlijnen verwijderd");
 }
 
 function serialize() {
@@ -276,7 +276,7 @@ function saveDebounced() {
 }
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(serialize()));
-  flash("Opgeslagen ✅");
+  flash("Opgeslagen");
 }
 function restoreState() {
   try {

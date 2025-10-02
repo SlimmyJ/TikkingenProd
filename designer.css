@@ -1,0 +1,114 @@
+:root{
+  --grid-10: repeating-linear-gradient(0deg, #f2f2f2 0 1px, transparent 1px 10px),
+             repeating-linear-gradient(90deg, #f2f2f2 0 1px, transparent 1px 10px);
+  --grid-20: repeating-linear-gradient(0deg, #f0f0f0 0 1px, transparent 1px 20px),
+             repeating-linear-gradient(90deg, #f0f0f0 0 1px, transparent 1px 20px);
+  --grid-30: repeating-linear-gradient(0deg, #efefef 0 1px, transparent 1px 30px),
+             repeating-linear-gradient(90deg, #efefef 0 1px, transparent 1px 30px);
+  --grid-40: repeating-linear-gradient(0deg, #ededed 0 1px, transparent 1px 40px),
+             repeating-linear-gradient(90deg, #ededed 0 1px, transparent 1px 40px);
+}
+
+body{ background: var(--gt-bg); font-family: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: var(--gt-black); }
+
+.designer-wrap{ max-width: 1240px; margin: 0 auto; padding: 20px; }
+
+.designer-toolbar{
+  position: sticky; top: 0; z-index: 1000;
+  background: var(--gt-white); border: 1px solid var(--gt-border);
+  border-radius: 14px; padding: 10px 14px; box-shadow: var(--gt-shadow);
+}
+
+.gt-logo img{ height: 32px; width:auto; display:block; }
+.gt-logo span{ font-weight: 800; color: var(--gt-black); }
+
+.board{
+  position: relative;
+  min-height: 520px;
+  background: var(--gt-white);
+  border: 1px solid var(--gt-border);
+  border-radius: 16px;
+  box-shadow: var(--gt-shadow);
+  overflow: hidden;
+  outline: none;
+}
+
+/* Default grid (20px) */
+.board.grid-10{ background-image: var(--grid-10); }
+.board.grid-20{ background-image: var(--grid-20); }
+.board.grid-30{ background-image: var(--grid-30); }
+.board.grid-40{ background-image: var(--grid-40); }
+.board.grid-20{ background-color: #fff; }
+
+.overlay{
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+/* Node tiles */
+.node{
+  position: absolute;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 54px; height: 54px;
+  background: #fff;
+  border: 2px solid var(--gt-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.08);
+  cursor: grab;
+  user-select: none;
+}
+.node:active{ cursor: grabbing; }
+.node .fa-solid, .node .fa-regular{ font-size: 22px; color: #111; }
+
+.node[data-type="Voertuig"] i{ color: #111; }
+.node[data-type="Prikklok"] i{ color: #111; }
+.node[data-type="Werf"] i{ color: #111; }
+
+/* Note boxes */
+.note{
+  position: absolute; min-width: 160px; max-width: 360px;
+  background: #fff; border: 1px solid #e7e7e7; border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+  padding: 6px 8px; font-size: 13px; color: #333;
+  cursor: grab; user-select: none;
+}
+.note:active{ cursor: grabbing; }
+.note[contenteditable]:focus{ outline: 2px dashed #ffd2d5; outline-offset: 2px; }
+
+/* Toolbar buttons */
+.btn-gt.btn-gt-danger{
+  border-color: #ffd2d5; color: #a10000; background: #fff3f4;
+}
+.btn-gt.btn-gt-danger:hover{ background:#ffe9eb; }
+
+.timeline-line{
+  stroke: #000; stroke-width: 6; stroke-linecap: round;
+}
+.timeline-tick{
+  stroke: #000; stroke-width: 3;
+}
+
+.note{
+  position: absolute; min-width: 180px; max-width: 380px;
+  background: #fff; border: 1px solid #e7e7e7; border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08); padding: 6px 8px;
+  font-size: 13px; color: #333;
+}
+.note-handle{
+  display: inline-flex; align-items:center; gap:6px;
+  cursor: grab; user-select: none; color:#888; font-size:12px; margin-bottom: 4px;
+}
+.note-handle:active{ cursor: grabbing; }
+.note-body[contenteditable="true"]:focus{ outline: 2px dashed #ffd2d5; outline-offset: 2px; }
+
+.gt-exporting .designer-toolbar { visibility: hidden; }
+
+.export-text-only .note {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.export-text-only .note-handle { display: none !important; }
+.export-text-only .note-body {
+  background: transparent !important;
+}
