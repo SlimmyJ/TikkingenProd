@@ -332,3 +332,49 @@ body.page-designer .toolbar-import {
 }
 #segColor::-webkit-color-swatch { border: none; border-radius: 999px; }
 #segColor::-moz-color-swatch { border: none; border-radius: 999px; }
+
+/* Board keeps size and positioning */
+.board {
+  position: relative;
+  height: 640px;
+  background: #fff;
+  border: 1px solid var(--gt-border, #ececec);
+  border-radius: 14px;
+  box-shadow: var(--gt-shadow, 0 14px 40px rgba(0,0,0,.08));
+  overflow: hidden;
+}
+
+/* Overlay sits BELOW nodes (so nodes can be dragged freely) */
+.overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: auto; /* allow clicking segments/baseline in empty areas */
+}
+
+/* Draggable nodes are ABOVE overlay */
+.node {
+  position: absolute;
+  z-index: 2;
+  cursor: grab;
+}
+
+/* Notes above nodes if you like */
+.note {
+  position: absolute;
+  z-index: 3;
+}
+
+/* Make palette items look/feel draggable */
+.palette .palette-item {
+  border: 1px solid var(--gt-border, #ececec);
+  background: #fff;
+  border-radius: 12px;
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: var(--gt-shadow, 0 8px 18px rgba(0,0,0,.05));
+  cursor: grab;
+}
+.palette .palette-item:active { cursor: grabbing; }

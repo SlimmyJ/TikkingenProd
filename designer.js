@@ -7,7 +7,6 @@ const snapCb = $('#snapToggle');
 const gridSel = $('#gridSize');
 const addNoteBtn = $('#addNote');
 const clearBtn = $('#clearCanvas');
-const recenterBtn = $('#recenterLine');
 const exportBtn = $('#exportPng');
 const segColorInp = $('#segColor');
 const undoBtn = $('#undoLast');
@@ -30,6 +29,7 @@ function setGridBackground() {
 function iconFor(type) {
   if (type === 'Voertuig') return '<i class="fa-solid fa-car-side"></i>';
   if (type === 'Werf') return '<i class="fa-solid fa-person-digging"></i>';
+  if (type === 'Huis') return '<i class="fa-solid fa-house"></i>';
   return '<i class="fa-regular fa-clock"></i>';
 }
 
@@ -169,12 +169,6 @@ clearBtn?.addEventListener('click', () => {
   clearOverlay();
 });
 
-recenterBtn?.addEventListener('click', () => {
-  if ($$('.node', board).length < 2) return;
-  timelineY = computeBaselineY();
-  drawTimeline();
-});
-
 gridSel.addEventListener('change', () => {
   GRID = parseInt(gridSel.value, 10) || 20;
   setGridBackground();
@@ -242,7 +236,7 @@ function clearOverlay() {
 }
 
 function startBaselineDrag(startClientY) {
-  const startVal = timelineY;
+  const startVal = timelineY ?? computeBaselineY();
   const move = ev => {
     let ny = startVal + (ev.clientY - startClientY);
     if (snapCb.checked) ny = snap(ny);
@@ -276,7 +270,7 @@ function drawTimeline() {
   overlay.appendChild(base);
 
   const hit = svgLine(minX, timelineY, maxX, timelineY, {
-    'stroke': 'rgba(0,0,0,0)',
+    stroke: 'rgba(0,0,0,0)',
     'stroke-width': 18,
     'stroke-linecap': 'round'
   });
@@ -341,5 +335,15 @@ exportBtn?.addEventListener('click', async () => {
     alert('Exporteren mislukt. Probeer opnieuw.');
   } finally {
     document.body.classList.remove('export-text-only');
+  }
+});
+
+window.addEventListener('load', () => {
+
+  if (!document.getElementById('board').classList.contains('grid-10') &&
+      !document.getElementById('board').classList.contains('grid-20') &&
+      !document.getElementById('board').classList.contains('grid-30') &&
+      !document.getElementById('board').classList.contains('grid-40')) {
+    document.getElementById('board').classList.add('grid-20');
   }
 });
