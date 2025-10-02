@@ -18,8 +18,8 @@ body {
   color: var(--gt-black);
 }
 body {
-  font-family: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -84,17 +84,15 @@ a:hover {
   box-shadow: none;
 }
 
-.input-group-sm .form-control[type="file"] {
+.input-group-sm .form-control[type='file'] {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   font-size: 0.875rem;
 }
 
-
 .toolbar-actions > * {
   margin-top: 6px;
 }
-
 
 .btn-gt {
   --pad-y: 0.55rem;
@@ -518,27 +516,36 @@ a:hover {
   border-color: #f5baba;
 }
 
-.file-import-group .form-control[type="file"] {
+.file-import-group .form-control[type='file'] {
   border-radius: 999px 0 0 999px;
   border: 1px solid var(--gt-border);
-  font-size: .875rem;
-  padding-top: .35rem;
-  padding-bottom: .35rem;
+  font-size: 0.875rem;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
 }
 .file-import-group .btn {
   border-radius: 0 999px 999px 0;
 }
 
-.export-row .track-wrap { overflow: visible; }
+.export-row .track-wrap {
+  overflow: visible;
+}
 .export-row .track-grid {
   display: inline-flex !important;
   flex-wrap: nowrap !important;
   gap: 20px;
 }
-.export-row .tikking.card { width: 320px; flex: 0 0 auto; }
+.export-row .tikking.card {
+  width: 320px;
+  flex: 0 0 auto;
+}
 
-.gt-print-doc.linear .tl-section { padding-top: 18px; }
-.gt-print-doc.linear .tl-title { margin-bottom: 14px; }
+.gt-print-doc.linear .tl-section {
+  padding-top: 18px;
+}
+.gt-print-doc.linear .tl-title {
+  margin-bottom: 14px;
+}
 
 .gt-print-doc.linear .tl-rail {
   position: relative;
@@ -549,11 +556,13 @@ a:hover {
 }
 
 .gt-print-doc.linear .tl-rail::before {
-  content: "";
+  content: '';
   position: absolute;
-  left: 0; right: 0; top: 50%;
+  left: 0;
+  right: 0;
+  top: 50%;
   height: 2px;
-  background: linear-gradient(90deg,#e5e5e5,#f0f0f0);
+  background: linear-gradient(90deg, #e5e5e5, #f0f0f0);
   transform: translateY(-50%);
 }
 
@@ -562,27 +571,50 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 80px; 
+  min-width: 80px;
 }
 
 .gt-print-doc.linear .tl-dot {
-  width: 12px; height: 12px; border-radius: 999px; background: #c20e1a; border: 2px solid #fff; 
-  box-shadow: 0 0 0 2px rgba(0,0,0,.06);
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #c20e1a;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
 }
 
 .gt-print-doc.linear .tl-time {
-  margin-top: 8px; font-weight: 800; font-size: 12px;
+  margin-top: 8px;
+  font-weight: 800;
+  font-size: 12px;
 }
 
 .gt-print-doc.linear .tl-meta {
-  margin-top: 4px; font-size: 11px; color: #333; display: flex; gap: 8px; align-items: center;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #333;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .gt-print-doc.linear .tl-badge {
-  font-weight: 800; font-size: 10px; padding: 2px 8px; border-radius: 999px; border: 1px solid transparent;
+  font-weight: 800;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid transparent;
 }
-.gt-print-doc.linear .tl-badge.in  { color:#16a34a; background:rgba(22,163,74,.08); border-color:rgba(22,163,74,.25); }
-.gt-print-doc.linear .tl-badge.out { color:#c20e1a; background:rgba(194,14,26,.10); border-color:rgba(194,14,26,.30); }
+.gt-print-doc.linear .tl-badge.in {
+  color: #16a34a;
+  background: rgba(22, 163, 74, 0.08);
+  border-color: rgba(22, 163, 74, 0.25);
+}
+.gt-print-doc.linear .tl-badge.out {
+  color: #c20e1a;
+  background: rgba(194, 14, 26, 0.1);
+  border-color: rgba(194, 14, 26, 0.3);
+}
 
 .gt-print-doc.linear .tl-rail.equal .tl-stop {
   flex: 1 1 0;
@@ -590,6 +622,22 @@ a:hover {
 .gt-print-doc.linear .tl-rail.tight .tl-stop {
   flex: 0 0 auto;
 }
-.gt-logo { display:inline-flex; align-items:center; gap:.6rem; font-weight:900; letter-spacing:.2px; font-size:1.15rem; color: var(--gt-black); text-decoration:none; }
-.gt-logo img { height:36px; width:auto; display:block; }
-.gt-logo:focus { outline: none; }
+
+.gt-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  font-size: 1.15rem;
+  color: var(--gt-black);
+  text-decoration: none;
+}
+.gt-logo img {
+  height: 36px;
+  width: auto;
+  display: block;
+}
+.gt-logo:focus {
+  outline: none;
+}

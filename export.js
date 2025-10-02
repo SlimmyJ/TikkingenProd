@@ -67,7 +67,6 @@ export async function exportTimelinesA4(root = document) {
       drawConnectorsFor(wrap);
     }
 
-    // --- 4) Measure full content size after layout settles ---
     await nextFrame();
     const rect = clone.getBoundingClientRect();
     const fullWidth = Math.max(
@@ -79,7 +78,6 @@ export async function exportTimelinesA4(root = document) {
       Math.ceil(rect.height)
     );
 
-    // Guard against bad layout producing tiny canvases
     if (fullWidth < 20 || fullHeight < 20) {
       console.warn("Export skipped due to tiny size", {
         fullWidth,
@@ -90,11 +88,9 @@ export async function exportTimelinesA4(root = document) {
       continue;
     }
 
-    // lock width to avoid reflow between measure & capture
     clone.style.width = fullWidth + "px";
     clone.style.boxSizing = "border-box";
 
-    // --- 5) Render with html2canvas using FULL element size ---
     const full = await html2canvas(clone, {
       backgroundColor: "#ffffff",
       scale: 2,

@@ -1,89 +1,86 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="nl">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GeoTracer — Timeline Designer</title>
+  <title>GeoTracer — Designer</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap"
-    rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link href="geotracer-tikkingen.css" rel="stylesheet" />
   <link href="designer.css" rel="stylesheet" />
 </head>
 
-<body>
-<div class="app-toolbar">
-  <div class="container-fluid">
-    <div class="d-flex align-items-center gap-2 flex-wrap">
-      <a href="index.html" class="gt-logo me-2 text-decoration-none">
-        <img src="Pin_Rood_Transparant-002-cut.png" alt="GeoTracer" />    
-      </a>
-      <div class="ms-auto d-flex align-items-center gap-2 flex-wrap toolbar-actions">
-        <div class="d-flex align-items-center gap-2">
-          <span class="hint me-1">Sleep op canvas:</span>
-          <button class="btn btn-gt btn-sm palette-item" draggable="true" data-type="Prikklok" title="Prikklok">
-            <i class="fa-regular fa-clock"></i>
-          </button>
-          <button class="btn btn-gt btn-sm palette-item" draggable="true" data-type="Voertuig" title="Voertuig">
-            <i class="fa-solid fa-car-side"></i>
-          </button>
-          <button class="btn btn-gt btn-sm palette-item" draggable="true" data-type="Werf" title="Werf">
-            <i class="fa-solid fa-person-digging"></i>
-          </button>
-        </div>
-        <div class="btn-group btn-group-sm" role="group" aria-label="Acties">
-          <button id="addNote" class="btn btn-gt" type="button">
-            <i class="fa-regular fa-comment"></i> Tekst
-          </button>
-          <button id="recenterLine" class="btn btn-gt" type="button">
-            <i class="fa-solid fa-arrows-left-right-to-line"></i> Recenter
-          </button>
-          <button id="clearCanvas" class="btn btn-gt btn-gt-danger" type="button">
-            <i class="fa-solid fa-trash-can"></i> Verwijder
-          </button>
-          <button id="exportPng" class="btn btn-gt-primary" type="button">
-            <i class="fa-solid fa-image"></i> Export
-          </button>
-        </div>    
-        <div class="form-check form-switch ms-1">
-          <input class="form-check-input" type="checkbox" id="snapToggle" checked />
-          <label class="form-check-label hint" for="snapToggle">Snap to grid</label>
-        </div>
-        <div class="d-inline-flex align-items-center gap-2">
-          <label for="gridSize" class="hint">Raster:</label>
-          <select id="gridSize" class="form-select form-select-sm" style="width: 90px;">
-            <option value="10">10px</option>
-            <option value="20" selected>20px</option>
-            <option value="30">30px</option>
-            <option value="40">40px</option>
-          </select>
+<body class="page-designer">
+  <div class="app-wrap">
+    <div class="app-toolbar">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <a href="index.html" class="gt-logo me-2 text-decoration-none">
+            <img src="Pin_Rood_Transparant-002-cut.png" alt="GeoTracer" />     
+          </a>
+
+          <div class="ms-auto d-flex align-items-center gap-2 flex-wrap toolbar-actions">
+            <div class="toolbar-designer d-flex align-items-center gap-2">
+              <span class="hint me-1">Plaats op canvas:</span>
+              <button class="btn btn-gt btn-sm palette-item" draggable="true" data-type="Prikklok" title="Prikklok">
+                <i class="fa-regular fa-clock"></i>
+              </button>
+              <button class="btn btn-gt btn-sm palette-item" draggable="true" data-type="Voertuig" title="Voertuig">
+                <i class="fa-solid fa-car-side"></i>
+              </button>
+              <button class="btn btn-gt btn-sm palette-item" draggable="true" data-type="Werf" title="Werf">
+                <i class="fa-solid fa-person-digging"></i>
+              </button>
+            </div>
+
+            <div class="toolbar-designer btn-group btn-group-sm" role="group" aria-label="Designer-acties">
+              <button id="addNote" class="btn btn-gt" type="button">
+                <i class="fa-regular fa-comment"></i> Tekst
+              </button>
+              <button id="recenterLine" class="btn btn-gt" type="button">
+                <i class="fa-solid fa-arrows-left-right-to-line"></i> Uitlijnen
+              </button>
+              <button id="clearCanvas" class="btn btn-gt btn-gt-danger" type="button">
+                <i class="fa-solid fa-trash-can"></i> Verwijder
+              </button>
+              <button id="exportPng" class="btn btn-gt-primary" type="button">
+                <i class="fa-solid fa-image"></i> Export
+              </button>
+            </div>
+
+            <div class="toolbar-designer form-check form-switch ms-1">
+              <input class="form-check-input" type="checkbox" id="snapToggle" checked />
+              <label class="form-check-label hint" for="snapToggle">Snap to grid</label>
+            </div>
+            <div class="toolbar-designer d-inline-flex align-items-center gap-2">
+              <label for="gridSize" class="hint">Raster:</label>
+              <select id="gridSize" class="form-select form-select-sm" style="width: 90px;">
+                <option value="10">10px</option>
+                <option value="20" selected>20px</option>
+                <option value="30">30px</option>
+                <option value="40">40px</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+
     <main class="container-fluid mt-3">
-      <div id="board" class="board" tabindex="0" aria-label="Ontwerp canvas (sleep iconen hier)">
+      <div id="board" class="board grid-20" tabindex="0" aria-label="Ontwerp canvas (sleep iconen hier)">
         <svg id="overlay" class="overlay" aria-hidden="true"></svg>
       </div>
       <p class="hint mt-2">
-        Sleep iconen uit de werkbalk op het canvas. Versleep ze vrij; met “Snap to grid” uitgelijnde rechte lijnen
-        maken.
-        Zodra 2 of meer iconen geplaatst zijn, verschijnt een tijdlijn (dikke zwarte lijn) met verticale markeringen op
-        de iconen.
-        Gebruik “Opmerking” om een verplaatsbaar tekstvak onder de lijn te plaatsen.
+        Sleep iconen uit de werkbalk op het canvas.Bij 2+ iconen verschijnt een tijdlijn. 
+        “Opmerking” voegt een verplaatsbaar tekstvak toe.
       </p>
     </main>
   </div>
 
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"
-    referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="module" src="designer.js"></script>
 </body>
-
 </html>
