@@ -282,3 +282,53 @@ body.page-designer .toolbar-index,
 body.page-designer .toolbar-import {
   display: none !important;
 }
+
+.overlay .seg-selected {
+  filter: drop-shadow(0 0 2px rgba(0,0,0,.25));
+}
+
+#overlay { pointer-events: auto; }
+#overlay line { pointer-events: stroke; }
+
+.seg-halo {
+  stroke: var(--gt-red, #c20e1a);
+  stroke-width: 14;
+  stroke-linecap: round;
+  opacity: .35;
+}
+
+#overlay { pointer-events: auto; }
+#overlay line { pointer-events: stroke; }
+
+.seg-halo {
+  stroke: var(--gt-red, #c20e1a);
+  stroke-width: 14;
+  stroke-linecap: round;
+  opacity: .35;
+}
+
+.color-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--gt-border, #ececec);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: var(--gt-shadow, 0 8px 18px rgba(0,0,0,.05));
+}
+
+#segColor {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+}
+#segColor::-webkit-color-swatch { border: none; border-radius: 999px; }
+#segColor::-moz-color-swatch { border: none; border-radius: 999px; }

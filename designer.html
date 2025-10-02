@@ -48,21 +48,28 @@
               <button id="exportPng" class="btn btn-gt-primary" type="button">
                 <i class="fa-solid fa-image"></i> Export
               </button>
+              <button id="undoLast" class="btn btn-gt" type="button" title="Undo laatste icoon">
+    <i class="fa-solid fa-rotate-left"></i> Undo
+  </button>
+<label class="color-pill ms-2">
+  <span class="hint">Kleur</span>
+  <input id="segColor" type="color" value="#000000" />
+</label>
             </div>
+<div class="toolbar-designer d-inline-flex align-items-center gap-2">
+  <label for="gridSize" class="hint m-0">Raster:</label>
+  <select id="gridSize" class="form-select form-select-sm" style="width: 90px;">
+    <option value="10">10px</option>
+    <option value="20" selected>20px</option>
+    <option value="30">30px</option>
+    <option value="40">40px</option>
+  </select>
+  <div class="form-check form-switch m-0 align-self-center">
+    <input class="form-check-input" type="checkbox" id="snapToggle" checked />
+    <label class="form-check-label hint" for="snapToggle">Snap</label>
+  </div>
+</div>
 
-            <div class="toolbar-designer form-check form-switch ms-1">
-              <input class="form-check-input" type="checkbox" id="snapToggle" checked />
-              <label class="form-check-label hint" for="snapToggle">Snap to grid</label>
-            </div>
-            <div class="toolbar-designer d-inline-flex align-items-center gap-2">
-              <label for="gridSize" class="hint">Raster:</label>
-              <select id="gridSize" class="form-select form-select-sm" style="width: 90px;">
-                <option value="10">10px</option>
-                <option value="20" selected>20px</option>
-                <option value="30">30px</option>
-                <option value="40">40px</option>
-              </select>
-            </div>
           </div>
         </div>
       </div>
