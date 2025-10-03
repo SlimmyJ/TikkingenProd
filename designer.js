@@ -18,6 +18,54 @@ const undoStack = [];
 const segmentColorMap = new Map();
 let selectedSegmentKey = null;
 
+const RECENT_COLORS_KEY = 'tt_recent_colors_v1';
+let colorClipboard = null;
+
+function loadRecentColors() {
+  try {
+    const raw = localStorage.getItem(RECENT_COLORS_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    if (Array.isArray(arr)) return arr.filter(v => typeof v === 'string');
+  } catch {}
+  return [];
+}
+
+function saveRecentColors(list) {
+  try {
+    localStorage.setItem(RECENT_COLORS_KEY, JSON.stringify(list.slice(0, 8)));
+  } catch {}
+}
+
+function pushRecentColor(hex) {
+  if (!hex || typeof hex !== 'string') return;
+  const norm = hex.trim().toLowerCase();
+  if (!/^#([0-9a-f]{3}|[0-9a-f]{6})$/.test(norm)) return;
+  const list = loadRecentColors();
+  const filtered = [norm, ...list.filter(c => c !== norm)];
+  saveRecentColors(filtered);
+  renderRecentColorSwatches();
+}
+
+function renderRecentColorSwatches() {
+  const cont = document.getElementById('recentColors');
+  if (!cont) return;
+  cont.innerHTML = '';
+  const list = loadRecentColors();
+  list.slice(0,8).forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'color-swatch';
+    b.title = c;
+    b.setAttribute('aria-label', `Use color ${c}`);
+    b.style.background = c;
+    b.addEventListener('click', () => {
+      segColorInp.value = c;
+      applyCurrentColorToSelection();
+      pushRecentColor(c);
+    });
+    cont.appendChild(b);
+  });
+}
+
 const snap = (v, g = GRID) => Math.round(v / g) * g;
 
 function setGridBackground() {
@@ -301,6 +349,7 @@ function drawTimeline() {
         selectedSegmentKey = null;
       } else {
         selectedSegmentKey = key;
+          updateSegColorFromSelection();
         if (segColorInp) segColorInp.value = toHex6(stroke);
       }
       drawTimeline();
@@ -319,24 +368,108 @@ function drawTimeline() {
   });
 }
 
+function updateSegColorFromSelection() {
+  if (!segColorInp) return;
+  const col = selectedSegmentKey
+    ? (segmentColorMap.get(selectedSegmentKey) || segColorInp.value)
+    : segColorInp.value;
+  segColorInp.value = col || '#c20e1a';
+}
+
+function applyCurrentColorToSelection() {
+  const color = segColorInp?.value || '#c20e1a';
+  if (!selectedSegmentKey) return;
+  segmentColorMap.set(selectedSegmentKey, color);
+  drawTimeline();
+}
+
+segColorInp?.addEventListener('input', () => {
+  applyCurrentColorToSelection();
+  pushRecentColor(segColorInp.value);
+});
+
+
 window.addEventListener('resize', drawTimeline);
 
-exportBtn?.addEventListener('click', async () => {
-  try {
-    drawTimeline();
-    document.body.classList.add('export-text-only');
-    const canvas = await html2canvas(board, { backgroundColor: '#fff', scale: 2, useCORS: true, logging: false });
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    const ts = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
-    a.download = `timeline-${ts}.png`;
-    a.click();
-  } catch {
-    alert('Exporteren mislukt. Probeer opnieuw.');
-  } finally {
-    document.body.classList.remove('export-text-only');
+window.addEventListener('keydown', (e) => {
+  const tag = (document.activeElement && document.activeElement.tagName || '').toLowerCase();
+  const typing = tag === 'input' || tag === 'textarea' || document.activeElement?.isContentEditable;
+  if (typing) return;
+
+  if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
+    if (selectedSegmentKey) {
+      const col = segmentColorMap.get(selectedSegmentKey) || segColorInp?.value;
+      if (col) colorClipboard = col;
+    }
+  }
+
+  if (e.ctrlKey && (e.key === 'v' || e.key === 'V')) {
+    if (selectedSegmentKey && colorClipboard) {
+      segmentColorMap.set(selectedSegmentKey, colorClipboard);
+      if (segColorInp) segColorInp.value = colorClipboard;
+      pushRecentColor(colorClipboard);
+      drawTimeline();
+    }
   }
 });
+
+// Unified PNG export with grid suppression
+async function exportPNG() {
+  const board = document.getElementById('board'); // board element has class "board grid-20" etc.
+  if (!board) return;
+
+  // Redraw if available
+  if (typeof drawTimeline === 'function') drawTimeline();
+
+  // Remember any grid-* class to restore later
+  const originalClasses = [...board.classList];
+  const gridClasses = originalClasses.filter(c => /^grid-\d+$/i.test(c));
+
+  // Add exporting flag + strip grid-* classes from live DOM
+  document.body.classList.add('exporting');
+  gridClasses.forEach(c => board.classList.remove(c));
+
+  try {
+    const canvas = await html2canvas(board, {
+      backgroundColor: '#fff',
+      scale: 2,
+      useCORS: true,
+      removeContainer: true,
+
+      // Make extra sure in the cloned DOM too
+      onclone(doc) {
+        const b = doc.getElementById('board');
+        if (b) {
+          // Remove any grid-* classes on the clone
+          [...b.classList].forEach(c => { if (/^grid-\d+$/i.test(c)) b.classList.remove(c); });
+          // And blank any background
+          b.style.background = 'none';
+          b.style.backgroundImage = 'none';
+          b.style.backgroundSize = '0 0';
+          b.style.boxShadow = 'none';
+        }
+      }
+    });
+
+    const ts = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = `timeline-${ts}.png`;
+    a.click();
+  } catch (err) {
+    console.error(err);
+    alert('Exporteren mislukt. Probeer opnieuw.');
+  } finally {
+    // Restore classes + remove exporting flag
+    gridClasses.forEach(c => board.classList.add(c));
+    document.body.classList.remove('exporting');
+  }
+}
+
+// Wire your button
+exportBtn?.addEventListener('click', exportPNG);
+
+
 
 window.addEventListener('load', () => {
 

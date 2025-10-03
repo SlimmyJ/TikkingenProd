@@ -378,3 +378,72 @@ body.page-designer .toolbar-import {
   cursor: grab;
 }
 .palette .palette-item:active { cursor: grabbing; }
+
+.color-recent {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+.color-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  border: 1px solid var(--gt-border);
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.color-swatch:focus {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+.export-text-only #board {
+  background: none !important;
+}
+
+.export-text-only #board { background: none !important; }
+
+/* Recent color swatches */
+.color-recent {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+.color-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  border: 1px solid var(--gt-border, #e6e7eb);
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.color-swatch:focus {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+.exporting #board,
+.exporting #board::before,
+.exporting #board::after,
+.exporting .grid,
+.exporting [data-grid],
+.exporting #grid,
+.exporting #overlayGrid,
+.exporting .gt-grid {
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Hide board grid during export no matter the grid size */
+.exporting .board[class*="grid-"] {
+  background: none !important;
+  background-image: none !important;
+  background-size: 0 0 !important;
+  box-shadow: none !important;
+}
