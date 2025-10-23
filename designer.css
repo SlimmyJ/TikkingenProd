@@ -128,6 +128,8 @@ body {
 .node[data-type='Werf'] i {
   color: #111;
 }
+.node[data-type='Bedrijf'] i { color: #111; }
+
 
 .note {
   position: absolute;
