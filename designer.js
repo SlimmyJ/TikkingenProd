@@ -1,14 +1,21 @@
 import { $, $$ } from "./lib/dom.js";
 import { iconFor } from "./lib/icons.js";
-import { toHex6, loadRecentColors, pushRecentColor } from "./lib/colors.js";
+import { toHex6 } from "./lib/colors.js";
 import { attachNodeDrag } from "./lib/drag.js";
 import { GRID, setGrid, snap } from "./lib/grid.js";
-import { attachNoteDrag } from './lib/drag-note.js'
-import { svgLine, clearOverlay } from './lib/svg.js'
-import { wireJsonExport, wireJsonImport } from './lib/io-json.js'
-import { getNodeCenter, nodeCentersSorted, computeBaselineY as computeBaselineYUtil } from './lib/timeline-utils.js'
-
-
+import { attachNoteDrag } from "./lib/drag-note.js";
+import { svgLine, clearOverlay } from "./lib/svg.js";
+import { wireJsonExport, wireJsonImport } from "./lib/io-json.js";
+import {
+  nodeCentersSorted,
+  computeBaselineY as computeBaselineYUtil
+} from "./lib/timeline-utils.js";
+import {
+  renderRecentColors,
+  applySelectionColor,
+  selectedColor,
+  commitRecentColor
+} from "./lib/segments.js";
 
 const board = $("#board");
 const overlay = $("#overlay");
@@ -16,38 +23,51 @@ const snapCb = $("#snapToggle");
 const gridSel = $("#gridSize");
 const addNoteBtn = $("#addNote");
 const clearBtn = $("#clearCanvas");
-const exportPngBtn = $("#exportPng")
+const exportPngBtn = $("#exportPng");
 const segColorInp = $("#segColor");
 const undoBtn = $("#undoLast");
 const undoStack = [];
 const segmentColorMap = new Map();
-const exportJsonBtn = document.getElementById('exportJson')
-const importJsonInp = document.getElementById('importJson')
-const importJsonBtn = document.getElementById('importJsonBtn')
-const BASELINE_MIN_GAP = 60
-
+const exportJsonBtn = document.getElementById("exportJson");
+const importJsonInp = document.getElementById("importJson");
+const importJsonBtn = document.getElementById("importJsonBtn");
 
 let timelineY = null;
 let nextNodeId = 1;
 let selectedSegmentKey = null;
 let colorClipboard = null;
 
-function setGridValue(v){ setGrid(Number(v)); gridSel.value = String(v); setGridBackground(); }
-function setTimeline(v){ timelineY = (v == null ? null : Number(v)) }
-function setSegmentColorMap(m){ segmentColorMap.clear(); m.forEach((v,k)=>segmentColorMap.set(k,v)) }
-
-function reseedNextNodeId() {
-  const maxId = Math.max(0, ...$$('.node', board).map(n => Number(n.dataset.id) || 0))
-  nextNodeId = maxId + 1
+function setGridValue(v) {
+  setGrid(Number(v));
+  gridSel.value = String(v);
+  setGridBackground();
+}
+function setTimeline(v) {
+  timelineY = v == null ? null : Number(v);
+}
+function setSegmentColorMap(m) {
+  segmentColorMap.clear();
+  m.forEach((v, k) => segmentColorMap.set(k, v));
 }
 
+function reseedNextNodeId() {
+  const maxId = Math.max(
+    0,
+    ...$$(".node", board).map((n) => Number(n.dataset.id) || 0)
+  );
+  nextNodeId = maxId + 1;
+}
 
 wireJsonExport(exportJsonBtn, {
   board,
-  get timelineY() { return timelineY },       
+  get timelineY() {
+    return timelineY;
+  },
   segmentColorMap,
-  get grid() { return GRID }                  
-})
+  get grid() {
+    return GRID;
+  }
+});
 
 wireJsonImport(importJsonBtn, importJsonInp, {
   board,
@@ -55,34 +75,15 @@ wireJsonImport(importJsonBtn, importJsonInp, {
   setTimeline,
   setSegmentColorMap,
   addNode: (type, x, y, forcedId) => {
-    const node = addNode(type, x, y)
-    if (forcedId != null) node.dataset.id = String(forcedId)
-    return node
+    const node = addNode(type, x, y);
+    if (forcedId != null) node.dataset.id = String(forcedId);
+    return node;
   },
-  draw: () => { reseedNextNodeId(); drawTimeline(); }
-})
-
-
-
-function renderRecentColorSwatches() {
-  const cont = document.getElementById("recentColors");
-  if (!cont) return;
-  cont.innerHTML = "";
-  const list = loadRecentColors();
-  list.slice(0, 8).forEach((c) => {
-    const b = document.createElement("button");
-    b.className = "color-swatch";
-    b.title = c;
-    b.setAttribute("aria-label", `Use color ${c}`);
-    b.style.background = c;
-    b.addEventListener("click", () => {
-      segColorInp.value = c;
-      applyCurrentColorToSelection();
-      pushRecentColor(c);
-    });
-    cont.appendChild(b);
-  });
-}
+  draw: () => {
+    reseedNextNodeId();
+    drawTimeline();
+  }
+});
 
 function setGridBackground() {
   const cls = `grid-${GRID}`;
@@ -90,7 +91,7 @@ function setGridBackground() {
   board.classList.add(cls);
 }
 
-const computeBaselineY = () => computeBaselineYUtil(board, snap)
+const computeBaselineY = () => computeBaselineYUtil(board, snap);
 
 $$(".palette-item").forEach((btn) => {
   btn.addEventListener("dragstart", (e) => {
@@ -132,7 +133,7 @@ function addNode(type, x, y) {
     snapEnabled: () => snapCb.checked,
     onMove: () => {
       drawTimeline();
-    },
+    }
   });
   return node;
 }
@@ -147,7 +148,16 @@ addNoteBtn?.addEventListener("click", () => {
   `;
   note.style.left = `${snap((board.clientWidth - 200) / 2)}px`;
   note.style.top = `${snap(y)}px`;
-  attachNoteDrag(note, board, ".note-handle", snap, () => snapCb.checked, () => { drawTimeline() })
+  attachNoteDrag(
+    note,
+    board,
+    ".note-handle",
+    snap,
+    () => snapCb.checked,
+    () => {
+      drawTimeline();
+    }
+  );
   board.appendChild(note);
 });
 
@@ -214,36 +224,33 @@ function startBaselineDrag(startClientY) {
 }
 
 function drawTimeline() {
-  clearOverlay(overlay)
+  clearOverlay(overlay);
 
-  const pts = nodeCentersSorted(board)
-  if (pts.length < 2) return
+  const pts = nodeCentersSorted(board);
+  if (pts.length < 2) return;
 
-  if (timelineY == null) timelineY = computeBaselineY()
+  if (timelineY == null) timelineY = computeBaselineY();
 
-  // keep a small gap between baseline and closest icon
-  const dists = pts.map(p => Math.abs(p.y - timelineY))
-  const minDist = Math.min(...dists)
-  if (Number.isFinite(minDist) && minDist < BASELINE_MIN_GAP) {
-    const avgY = pts.reduce((s,p)=>s+p.y,0) / pts.length
-    const dir = (avgY >= timelineY) ? -1 : 1
-    timelineY = snap(timelineY + dir * (BASELINE_MIN_GAP - minDist))
-  }
+  const MARGIN = 20;
+  timelineY = Math.max(
+    MARGIN,
+    Math.min(board.clientHeight - MARGIN, timelineY)
+  );
 
-  const minX = pts[0].x
-  const maxX = pts[pts.length - 1].x
+  const minX = pts[0].x;
+  const maxX = pts[pts.length - 1].x;
 
   const base = svgLine(minX, timelineY, maxX, timelineY, {
     stroke: "#000",
     "stroke-width": 4,
-    "stroke-linecap": "round",
+    "stroke-linecap": "round"
   });
   overlay.appendChild(base);
 
   const hit = svgLine(minX, timelineY, maxX, timelineY, {
     stroke: "rgba(0,0,0,0)",
     "stroke-width": 18,
-    "stroke-linecap": "round",
+    "stroke-linecap": "round"
   });
   hit.style.cursor = "ns-resize";
   hit.addEventListener("pointerdown", (e) => startBaselineDrag(e.clientY));
@@ -266,7 +273,7 @@ function drawTimeline() {
       stroke,
       "stroke-width": 8,
       "stroke-linecap": "round",
-      "data-key": key,
+      "data-key": key
     });
     seg.style.cursor = "pointer";
     seg.addEventListener("click", () => {
@@ -274,8 +281,12 @@ function drawTimeline() {
         selectedSegmentKey = null;
       } else {
         selectedSegmentKey = key;
-        updateSegColorFromSelection();
-        if (segColorInp) segColorInp.value = toHex6(stroke);
+        if (segColorInp)
+          segColorInp.value = selectedColor(
+            segmentColorMap,
+            selectedSegmentKey,
+            toHex6(stroke)
+          );
       }
       drawTimeline();
     });
@@ -287,31 +298,30 @@ function drawTimeline() {
       svgLine(p.x, timelineY - 14, p.x, timelineY + 14, {
         stroke: "#000",
         "stroke-width": 3,
-        "stroke-linecap": "round",
+        "stroke-linecap": "round"
       })
     );
   });
 }
 
-function updateSegColorFromSelection() {
-  if (!segColorInp) return;
-  const col = selectedSegmentKey
-    ? segmentColorMap.get(selectedSegmentKey) || segColorInp.value
-    : segColorInp.value;
-  segColorInp.value = col || "#c20e1a";
-}
-
-function applyCurrentColorToSelection() {
-  const color = segColorInp?.value || "#c20e1a";
-  if (!selectedSegmentKey) return;
-  segmentColorMap.set(selectedSegmentKey, color);
-  drawTimeline();
-}
-
 segColorInp?.addEventListener("input", () => {
-  applyCurrentColorToSelection();
-  pushRecentColor(segColorInp.value);
-  renderRecentColorSwatches();
+  applySelectionColor(
+    segmentColorMap,
+    selectedSegmentKey,
+    segColorInp.value,
+    () => drawTimeline()
+  );
+});
+
+segColorInp?.addEventListener("change", () => {
+  commitRecentColor(segColorInp.value, () => {
+    renderRecentColors(document.getElementById("recentColors"), (c) => {
+      segColorInp.value = c;
+      applySelectionColor(segmentColorMap, selectedSegmentKey, c, () =>
+        drawTimeline()
+      );
+    });
+  });
 });
 
 window.addEventListener("resize", drawTimeline);
@@ -338,26 +348,31 @@ window.addEventListener("keydown", (e) => {
     if (selectedSegmentKey && colorClipboard) {
       segmentColorMap.set(selectedSegmentKey, colorClipboard);
       if (segColorInp) segColorInp.value = colorClipboard;
-      pushRecentColor(colorClipboard);
-      renderRecentColorSwatches();
+      renderRecentColors(document.getElementById("recentColors"), (c) => {
+        segColorInp.value = c;
+        applySelectionColor(segmentColorMap, selectedSegmentKey, c, () =>
+          drawTimeline()
+        );
+      });
+      drawTimeline();
+      commitRecentColor(colorClipboard, () => {
+        renderRecentColors(document.getElementById("recentColors"), (c) => {
+          segColorInp.value = c;
+          applySelectionColor(segmentColorMap, selectedSegmentKey, c, () =>
+            drawTimeline()
+          );
+        });
+      });
       drawTimeline();
     }
   }
 });
 
-// Unified PNG export with grid suppression
 async function exportPNG() {
-  const board = document.getElementById("board"); // board element has class "board grid-20" etc.
   if (!board) return;
-
-  // Redraw if available
   if (typeof drawTimeline === "function") drawTimeline();
-
-  // Remember any grid-* class to restore later
   const originalClasses = [...board.classList];
   const gridClasses = originalClasses.filter((c) => /^grid-\d+$/i.test(c));
-
-  // Add exporting flag + strip grid-* classes from live DOM
   document.body.classList.add("exporting");
   gridClasses.forEach((c) => board.classList.remove(c));
 
@@ -371,17 +386,15 @@ async function exportPNG() {
       onclone(doc) {
         const b = doc.getElementById("board");
         if (b) {
-          // Remove any grid-* classes on the clone
           [...b.classList].forEach((c) => {
             if (/^grid-\d+$/i.test(c)) b.classList.remove(c);
           });
-          // blank background
           b.style.background = "none";
           b.style.backgroundImage = "none";
           b.style.backgroundSize = "0 0";
           b.style.boxShadow = "none";
         }
-      },
+      }
     });
 
     const ts = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
@@ -393,12 +406,11 @@ async function exportPNG() {
     console.error(err);
     alert("Exporteren mislukt. Probeer opnieuw.");
   } finally {
-    // Restore classes + remove exporting flag
     gridClasses.forEach((c) => board.classList.add(c));
     document.body.classList.remove("exporting");
   }
 }
-exportPngBtn?.addEventListener("click", exportPNG)
+exportPngBtn?.addEventListener("click", exportPNG);
 
 window.addEventListener("load", () => {
   if (
@@ -409,5 +421,10 @@ window.addEventListener("load", () => {
   ) {
     document.getElementById("board").classList.add("grid-20");
   }
-  renderRecentColorSwatches(); 
+  renderRecentColors(document.getElementById("recentColors"), (c) => {
+    segColorInp.value = c;
+    applySelectionColor(segmentColorMap, selectedSegmentKey, c, () =>
+      drawTimeline()
+    );
+  });
 });

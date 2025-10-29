@@ -4,54 +4,117 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>GeoTracer — Designer</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link href="designer.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </head>
+
   <body>
     <div class="app-wrap">
       <div class="app-toolbar">
-        <div class="container-fluid">
-          <div class="d-flex align-items-center gap-2 flex-wrap">
-            <div class="gt-logo me-2">
-              <a href="index.html"><img src="Pin_Rood_Transparant-002-cut.png" alt="GeoTracer" /></a>
-    
-            </div>
-            <div class="ms-auto d-flex align-items-center gap-2 flex-wrap toolbar-actions">
-              <div class="palette">
-                <button class="palette-item" draggable="true" data-type="Prikklok" title="Prikklok"><i class="fa-regular fa-clock"></i></button>
-                <button class="palette-item" draggable="true" data-type="Voertuig" title="Voertuig"><i class="fa-solid fa-car-side"></i></button>
-                <button class="palette-item" draggable="true" data-type="Werf" title="Werf"><i class="fa-solid fa-person-digging"></i></button>
-                <button class="palette-item" draggable="true" data-type="Huis" title="Huis"><i class="fa-solid fa-house"></i></button>
-                <button class="palette-item" draggable="true" data-type="Bedrijf" title="Bedrijf"><i class="fa-solid fa-building"></i></button>
-              </div>
-              <button id="addNote" class="btn btn-gt btn-sm" type="button"><i class="fa-solid fa-note-sticky"></i> Opmerking</button>
-              <button id="clearCanvas" class="btn btn-gt btn-sm btn-gt-danger" type="button"><i class="fa-solid fa-trash-can"></i> Leeg</button>
-              <div class="pill-select">
-                <label for="gridSize" class="hint m-0">Raster</label>
-                <select id="gridSize" class="form-select form-select-sm">
-                  <option value="10">10px</option>
-                  <option value="20" selected>20px</option>
-                  <option value="30">30px</option>
-                  <option value="40">40px</option>
-                </select>
-              </div>
-              <div class="form-check form-switch m-0 align-self-center">
-                <input class="form-check-input" type="checkbox" id="snapToggle" checked />
-                <label class="form-check-label hint" for="snapToggle">Snap</label>
-              </div>
-              <input id="segColor" type="color" class="form-control form-control-color" value="#000000" title="Segmentkleur" />
-              <button id="undoLast" class="btn btn-gt btn-sm" type="button"><i class="fa-solid fa-rotate-left"></i> Undo</button>
-              <button id="exportPng" class="btn btn-gt btn-sm" type="button"><i class="fa-solid fa-image"></i> PNG</button> 
-              <button id="exportJson" class="btn btn-gt btn-sm" type="button"><i class="fa-solid fa-file-export"></i> Export</button>
-<label class="btn btn-gt btn-sm m-0" for="importJson"><i class="fa-solid fa-file-import"></i> Import</label>
-<input id="importJson" type="file" accept="application/json" hidden>
-             
-            </div>
+ <div class="app-toolbar">
+  <div class="container-fluid">
+    <div class="toolbar">
+      <div class="toolbar__left">
+        <a class="gt-logo" href="index.html" title="GeoTracer">
+          <img src="Pin_Rood_Transparant-002-cut.png" alt="GeoTracer" />
+        </a>
+      </div>
+
+      <div class="toolbar__groups">
+        <!-- Palette -->
+        <div class="toolbar__group" aria-label="Palette">
+          
+          <div class="palette">
+            <button class="palette-item" draggable="true" data-type="Prikklok" title="Prikklok">
+              <i class="fa-regular fa-clock"></i>
+            </button>
+            <button class="palette-item" draggable="true" data-type="Voertuig" title="Voertuig">
+              <i class="fa-solid fa-car-side"></i>
+            </button>
+            <button class="palette-item" draggable="true" data-type="Werf" title="Werf">
+              <i class="fa-solid fa-person-digging"></i>
+            </button>
+            <button class="palette-item" draggable="true" data-type="Huis" title="Huis">
+              <i class="fa-solid fa-house"></i>
+            </button>
+            <button class="palette-item" draggable="true" data-type="Bedrijf" title="Bedrijf">
+              <i class="fa-solid fa-building"></i>
+            </button>
           </div>
         </div>
+
+
+        <!-- Notes / Clear -->
+        <div class="toolbar__group" aria-label="Canvas">  
+          <button id="clearCanvas" class="btn btn-gt btn-sm btn-gt-danger" type="button" title="Canvas leegmaken">
+            <i class="fa-solid fa-trash-can"></i> <span class="btn-text"></span>
+          </button>
+          <button id="undoLast" class="btn btn-gt btn-sm" type="button" title="Ongedaan maken">
+            <i class="fa-solid fa-rotate-left"></i> <span class="btn-text"></span>
+          </button>
+        </div>
+
+
+        <!-- Grid / Snap -->
+        <div class="toolbar__group" aria-label="Raster">
+          <select id="gridSize" class="form-select form-select-sm">
+            <option value="10">10px</option>
+            <option value="20" selected>20px</option>
+            <option value="30">30px</option>
+            <option value="40">40px</option>
+          </select>
+
+          <label class="form-check form-switch m-0" title="Snap aan/uit">
+            <input class="form-check-input" type="checkbox" id="snapToggle" checked />
+            <span class="form-check-label hint">Snap</span>
+          </label>
+        </div>
+
+
+        <!-- Segment colors -->
+        <div class="toolbar__group" aria-label="Segmentkleur">
+          <input id="segColor" type="color" class="form-control form-control-color" value="#000000" title="Segmentkleur" />
+          <div id="recentColors" class="recent-colors"></div>
+        </div>
+
+
+        <!-- Export / Import -->
+        <div class="toolbar__group" aria-label="Bestanden">
+          <button id="exportPng" class="btn btn-gt btn-sm" type="button" title="Exporteer PNG">
+            <i class="fa-solid fa-image"></i> <span class="btn-text">PNG</span>
+          </button>
+
+          <button id="exportJson" class="btn btn-gt btn-sm" type="button" title="Exporteer JSON">
+            <i class="fa-solid fa-file-export"></i> <span class="btn-text">Export</span>
+          </button>
+
+          <button id="importJsonBtn" class="btn btn-gt btn-sm" type="button" title="Importeer JSON">
+            <i class="fa-solid fa-file-import"></i> <span class="btn-text">Import</span>
+          </button>
+          <input id="importJson" type="file" accept="application/json" hidden />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
       <main class="designer-main">
         <div id="board" class="board grid-20">
